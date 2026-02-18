@@ -1,6 +1,0 @@
-../Core/Src/smv_ads1118.c:5:13:DRDY_WAIT	3
-../Core/Src/smv_ads1118.c:15:15:SMV_ADS1118_Read	3
-../Core/Src/smv_ads1118.c:48:6:SMV_ADS1118_Sweep	6
-../Core/Src/smv_ads1118.c:130:16:SMV_ADS1118_Check_Flag	1
-../Core/Src/smv_ads1118.c:134:13:SMV_ADS1118_Setup	2
-../Core/Src/smv_ads1118.c:178:13:ADS_new	1
