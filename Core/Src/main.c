@@ -186,12 +186,9 @@ int main(void)
 	  // ADC, CAN TX
 	  adc1.sweep(&adc1, adc_readings);
 	  if (currentTime - lastTxTime >= CAN_TX_DELAY) {
-		  can1.send(&can1, adc_readings[PRESSURE], Pressure); // FC to RC
-		  HAL_Delay(1);
+		  can1.send(&can1, adc_readings[PRESSURE], FC_Pressure); // FC to RC
 		  can1.send(&can1, adc_readings[BRAKE], Brake); // FC to MC
-		  HAL_Delay(1);
 		  can1.send(&can1, adc_readings[THROTTLE], Gas); // FC to DAQ
-		  HAL_Delay(1);
 		  lastTxTime = currentTime;
 	  }
 

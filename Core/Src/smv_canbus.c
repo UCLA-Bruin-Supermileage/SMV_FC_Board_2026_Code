@@ -12,66 +12,61 @@ typedef union {
 
 //char strings are included in this file because STM32 library files must be individually placed, so we limited the number of files
 const char* devices[] = {
-    "Bear_1",
-    "UI",
-    "HS1",
-    "HS2",
-    "HS3",
-    "HS4",
-    "FC",
-    "Joule_H",
-    "Joule_L",
-    "Safety",
-    "DAQ_Board",
+	"Safety",
+	"UI",
+	"FC",
+	"RC",
+	"Motor_Controller",
+	"Joule_H",
+	"Joule_L",
+	"DAQ_Board"
 };
 
 
 const char* motorMessage[] = {
-    "Hall_velocity",
-    "Torque_motor",
-    "Current",
-    "Board_Temp",
-    "Motor_Temp",
+	"Hall_Velocity",
+	"Motor_Torque",
+	"Motor_Current",
+	"Board_Temp",
+	"Motor_Temp",
 };
 
 const char* UIMessage[] = {
-    "Blink_Left",
-    "Blink_Right",
-    "Reverse",
-    "Headlights",
-    "Wipers",
-    "Hazard",
-    "Button",
-    "Switch",
-    "Motor",
-    "Horn",
-    "DAQ_Button",
+	"Emergency_Stop",
+	"Supercap_Discharge",
+	"Blink_Left",
+	"Blink_Right",
+	"Reverse",
+	"Headlights",
+	"Wipers",
+	"Horn",
+	"Hazard",
+	"Spare_Button",
+	"Spare_Switch",
+	"Regen",
+	"DAQ_Button"
 };
 
-const char* HSMessage[] = {
-    "Gyro_x",
-    "Gyro_y",
-    "Gyro_z",
-    "Accel_x",
-    "Accel_y",
-    "Accel_z",
-    "Pressure",
-    "Torque_HS",
+const char* FCMessage[] = {
+	"Gas",
+	"Brake",
+	"FC_Pressure"
 };
 
-const char* FrontcenterMessage[] = {
-    "Gas",
-    "Brake",
+const char *RCMessage[] = {
+	"RC_Pressure",
+	"RC_Torque"
 };
 
-const char* JoulemeterMessage[] = {
+const char* JouleMessage[] = {
     "Power",
 };
+
 
 const char* DAQMessage[] = {
     "Longitude",
     "Latitude",
-    "Speed"
+    "Altitude"
 };
 
 const char* readHardware(int first) {
@@ -85,31 +80,31 @@ const char* readDataType(int first, int last)
     switch (first)
     {
     case 0:
-        return motorMessage[last];
         break;
     case 1:
         return UIMessage[last];
         break;
     case 2:
+        return FCMessage[last];
+        break;
     case 3:
+        return RCMessage[last];
+        break;
     case 4:
+		return motorMessage[last];
+		break;
     case 5:
-        return HSMessage[last];
-        break;
-    case 6:
-        return FrontcenterMessage[last];
-        break;
-    case 7:
-    case 8:
-        return JoulemeterMessage[last];
-        break;
-    case 9:
-        return "Safety";
-        break;
-    case 10:
-        return DAQMessage[last];
-        break;
-    }
+        return JouleMessage[last];
+		break;
+	case 6:
+		return JouleMessage[last];
+		break;
+	case 7:
+		return DAQMessage[last];
+		break;
+    default:
+		break;
+	}
     return "";
 }
 
