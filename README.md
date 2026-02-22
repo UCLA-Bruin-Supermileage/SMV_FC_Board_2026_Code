@@ -33,11 +33,11 @@ Peripheral control pins should be set to GPIO_Output.
 
 The FC board broadcasts the following sensor readings through the use of the ADS1118.
 
-| Message | Target Board | 
-| ------- | ------------ |
-| FC_Pressure | RC |
-| Brake | MC |
-| Gas | DAQ |
+| Message | ADC Channel | Target Board | 
+| ------- | ------------| ------------ |
+| FC_Pressure | 0 | RC |
+| Brake | 1 | MC |
+| Gas | 2 | DAQ |
 
 ### CAN RX
 
