@@ -37,7 +37,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define CAN_TX_DELAY 10
-#define BLINK_INTERVAL 1000
+#define BLINK_INTERVAL 500
 
 #define PRESSURE 0
 #define BRAKE 1
