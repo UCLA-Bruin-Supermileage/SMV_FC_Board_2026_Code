@@ -37,7 +37,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define CAN_TX_DELAY 10
-#define BLINK_INTERVAL 1000
+#define BLINK_INTERVAL 500
 
 #define PRESSURE 0
 #define BRAKE 1
@@ -61,17 +61,23 @@ SPI_HandleTypeDef hspi3;
 static double adc_readings[4] = {0};
 static uint32_t lastTxTime;
 
-// Blinkers
+// PERIPHERAL STATES
 static volatile bool blink_left_active = false;
 static volatile bool blink_right_active = false;
-static uint32_t last_L_Blink_Time;
-static uint32_t last_R_Blink_Time;
+static volatile bool hazards_active = false;
+static volatile bool headlights_active = false;
+static volatile bool horn_active = false;
 
 // Miscellaneous
 CANBUS can1;
 SMV_ADS1118 adc1;
+static uint32_t last_Blink_Time;
 static uint8_t i = 0;
 static uint8_t error_flag = 0;
+volatile int sender;
+volatile int type;
+volatile double val;
+// volatile char type_string[20] = {0};
 
 
 /* USER CODE END PV */
@@ -97,14 +103,15 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *CanHandle)
     }else{
     	CAN_Interrupt_Helper(&can1);
 
-    	int sender = can1.getHardwareRaw(&can1);
-    	int type = can1.getDataTypeRaw(&can1);
-    	double val = can1.getData(&can1);
+    	sender = can1.getHardwareRaw(&can1);
+    	type = can1.getDataTypeRaw(&can1);
+    	val = can1.getData(&can1);
+    	// strcpy(type_string, can1.getDataType(&can1));
 
     	if (sender == UI) {
     		// Horn
     		if (type == Horn) {
-    			HAL_GPIO_WritePin(Horn_GPIO_Port, Horn_Pin, (val > 0.5) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+    			horn_active = (val > 0.5) ? true : false;
     		}
     		// Wipers
     		else if (type == Wipers) {
@@ -115,8 +122,11 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *CanHandle)
     		}
     		// Headlights
     		else if (type == Headlights) {
-    			HAL_GPIO_WritePin(HLR_GPIO_Port, HLR_Pin, (val > 0.5) ? GPIO_PIN_SET : GPIO_PIN_RESET); // right headlights
-    			HAL_GPIO_WritePin(HLL_GPIO_Port, HLL_Pin, (val > 0.5) ? GPIO_PIN_SET : GPIO_PIN_RESET); // left headlights
+    			headlights_active = (val > 0.5) ? true : false;
+    		}
+    		// Hazard Lights
+    		else if (type == Hazard) {
+    			hazards_active = (val > 0.5) ? true : false;
     		}
     		// Turn Signals
     		else if (type == Blink_Left) {
@@ -173,15 +183,20 @@ int main(void)
   adc1.init(&adc1, &hspi3, CS_GPIO_Port, CS_Pin, GPIOC, GPIO_PIN_11);
 
   lastTxTime = HAL_GetTick();
-  last_L_Blink_Time = HAL_GetTick();
-  last_R_Blink_Time = HAL_GetTick();
+  last_Blink_Time = HAL_GetTick();
+  uint32_t currentTime = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  uint32_t currentTime = HAL_GetTick();
+	  currentTime = HAL_GetTick();
+	  static bool blink_state = false;
+	  if (currentTime - last_Blink_Time >= BLINK_INTERVAL) {
+		  blink_state = !blink_state;
+		  last_Blink_Time = currentTime;
+	  }
 
 	  // ADC, CAN TX
 	  adc1.sweep(&adc1, adc_readings);
@@ -192,27 +207,35 @@ int main(void)
 		  lastTxTime = currentTime;
 	  }
 
+
+
 	  // TURN SIGNAL IMPLEMENTATION
 	  if (blink_left_active) {
-		  if (currentTime - last_L_Blink_Time >= BLINK_INTERVAL) {
-			  HAL_GPIO_TogglePin(BlinkLeft_GPIO_Port, BlinkLeft_Pin);
-			  last_L_Blink_Time = currentTime;
-		  }
+		  HAL_GPIO_WritePin(BlinkLeft_GPIO_Port, BlinkLeft_Pin, blink_state ? GPIO_PIN_SET : GPIO_PIN_RESET);
 	  }
 	  else {
 		  HAL_GPIO_WritePin(BlinkLeft_GPIO_Port, BlinkLeft_Pin, GPIO_PIN_RESET);
 	  }
 
 	  if (blink_right_active) {
-		  if (currentTime - last_R_Blink_Time >= BLINK_INTERVAL) {
-			  HAL_GPIO_TogglePin(BlinkRight_GPIO_Port, BlinkRight_Pin);
-			  last_R_Blink_Time = currentTime;
-		  }
+		  HAL_GPIO_WritePin(BlinkRight_GPIO_Port, BlinkRight_Pin, blink_state ? GPIO_PIN_SET : GPIO_PIN_RESET);
 	  }
 	  else {
 		  HAL_GPIO_WritePin(BlinkRight_GPIO_Port, BlinkRight_Pin, GPIO_PIN_RESET);
 	  }
 
+	  // HAZARD & HEADLIGHTS IMPLEMENTATION
+	  if (hazards_active) {
+		  HAL_GPIO_WritePin(HLR_GPIO_Port, HLR_Pin, blink_state ? GPIO_PIN_SET : GPIO_PIN_RESET);
+		  HAL_GPIO_WritePin(HLL_GPIO_Port, HLL_Pin, blink_state ? GPIO_PIN_SET : GPIO_PIN_RESET);
+	  }
+	  else {
+		  HAL_GPIO_WritePin(HLR_GPIO_Port, HLR_Pin, (headlights_active) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+		  HAL_GPIO_WritePin(HLL_GPIO_Port, HLL_Pin, (headlights_active) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+	  }
+
+	  // HORN IMPLEMENTATION
+	  HAL_GPIO_WritePin(Horn_GPIO_Port, Horn_Pin, (horn_active) ? GPIO_PIN_SET : GPIO_PIN_RESET);
 
     /* USER CODE END WHILE */
 
