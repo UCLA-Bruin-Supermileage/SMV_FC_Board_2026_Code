@@ -50,3 +50,4 @@ The FC board listens for the following commands from the User Interface (UI) boa
 | Headlights | Set PA7 and PB6 HIGH/LOW |
 | Blink_Left | Toggles PA9 at 500ms intervals when active |
 | Blink_Right | Toggles PC7 at 500ms intervals when active |
+| Hazard | Toggles PA7 and PB6 at 500ms intervals when active |
