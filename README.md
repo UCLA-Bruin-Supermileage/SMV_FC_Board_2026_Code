@@ -48,5 +48,5 @@ The FC board listens for the following commands from the User Interface (UI) boa
 | Horn | Set PA6 HIGH/LOW |
 | Wipers | *Pending implementation* |
 | Headlights | Set PA7 and PB6 HIGH/LOW |
-| Blink_Left | Toggles PA9 at 1000ms intervals when active |
-| Blink_Right | Toggles PC7 at 1000ms intervals when active |
+| Blink_Left | Toggles PA9 at 500ms intervals when active |
+| Blink_Right | Toggles PC7 at 500ms intervals when active |
