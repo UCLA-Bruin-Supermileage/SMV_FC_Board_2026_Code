@@ -90,7 +90,7 @@ struct SMV_ADS1118{
 	double channel_reads [4];
 
 	/* function pointers 4+ bytes */
-	double (*read)(SMV_ADS1118*, uint16_t);
+	double (*read)(SMV_ADS1118*, ADC_CHANNELS);
 	void (*sweep)(SMV_ADS1118*, double*);
 	uint8_t (*checkFlag)(SMV_ADS1118*);
 	void (*init)(SMV_ADS1118*, SPI_HandleTypeDef *, GPIO_TypeDef*, uint16_t, GPIO_TypeDef*, uint16_t);

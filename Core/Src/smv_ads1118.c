@@ -23,7 +23,7 @@ static double SMV_ADS1118_Read(SMV_ADS1118 *ads, ADC_CHANNELS adc_channel){
   // this first Transmit tells the ADS1118 what data we want
   // we don't care about receiving any data because it's data that was on the ADS1118 from before
 	HAL_GPIO_WritePin(ads->cs_port, ads->cs_pin, GPIO_PIN_RESET);
-	if (HAL_SPI_Transmit(ads->hspi, (uint16_t*)&inputCode, 1, 100)!= HAL_OK){
+	if (HAL_SPI_Transmit(ads->hspi, (uint8_t*)&inputCode, 1, 100)!= HAL_OK){
 		ads->error_flag = 1;
 		Error_Handler();
 	}
@@ -33,7 +33,7 @@ static double SMV_ADS1118_Read(SMV_ADS1118 *ads, ADC_CHANNELS adc_channel){
 	DRDY_WAIT(ads);
 
   // Now we just retrieve data that we actually want which is waiting on the ADS118
-	if (HAL_SPI_TransmitReceive(ads->hspi, (uint16_t*)&inputCode, (uint16_t*)&(spi_buf.unsgnd), 1, 100)!= HAL_OK){
+	if (HAL_SPI_TransmitReceive(ads->hspi, (uint8_t*)&inputCode, (uint8_t*)&(spi_buf.unsgnd), 1, 100)!= HAL_OK){
 		ads->error_flag = 1;
 		Error_Handler();
 	}
@@ -54,7 +54,7 @@ void SMV_ADS1118_Sweep (SMV_ADS1118 *ads, double arr []){
 	uint16_t inputCode = ads->config.inputCode;
 
 	HAL_GPIO_WritePin(ads->cs_port, ads->cs_pin, GPIO_PIN_RESET);
-	if (HAL_SPI_Transmit(ads->hspi, (uint16_t*)&inputCode, 1, 100)!= HAL_OK){
+	if (HAL_SPI_Transmit(ads->hspi, (uint8_t*)&inputCode, 1, 100)!= HAL_OK){
 		ads->error_flag = 1;
 		Error_Handler();
 	}
@@ -67,7 +67,7 @@ void SMV_ADS1118_Sweep (SMV_ADS1118 *ads, double arr []){
 
 	ads->config.bits.mux = ADC_CHANNEL_1;
 	inputCode = ads->config.inputCode;
-	if (HAL_SPI_TransmitReceive(ads->hspi, (uint16_t*)&inputCode, (uint16_t*)&(spi_buf.unsgnd), 1, 100)!= HAL_OK){
+	if (HAL_SPI_TransmitReceive(ads->hspi, (uint8_t*)&inputCode, (uint8_t*)&(spi_buf.unsgnd), 1, 100)!= HAL_OK){
 		ads->error_flag = 1;
 		Error_Handler();
 	}
@@ -84,7 +84,7 @@ void SMV_ADS1118_Sweep (SMV_ADS1118 *ads, double arr []){
 	ads->config.bits.mux = ADC_CHANNEL_2;
 	inputCode = ads->config.inputCode;
 
-	if (HAL_SPI_TransmitReceive(ads->hspi, (uint16_t*)&inputCode, (uint16_t*)&(spi_buf.unsgnd), 1, 100)!= HAL_OK){
+	if (HAL_SPI_TransmitReceive(ads->hspi, (uint8_t*)&inputCode, (uint8_t*)&(spi_buf.unsgnd), 1, 100)!= HAL_OK){
 		ads->error_flag = 1;
 		Error_Handler();
 	}
@@ -100,7 +100,7 @@ void SMV_ADS1118_Sweep (SMV_ADS1118 *ads, double arr []){
 	ads->config.bits.mux = ADC_CHANNEL_3;
 	inputCode = ads->config.inputCode;
 
-	if (HAL_SPI_TransmitReceive(ads->hspi, (uint16_t*)&inputCode, (uint16_t*)&(spi_buf.unsgnd), 1, 100)!= HAL_OK){
+	if (HAL_SPI_TransmitReceive(ads->hspi, (uint8_t*)&inputCode, (uint8_t*)&(spi_buf.unsgnd), 1, 100)!= HAL_OK){
 		ads->error_flag = 1;
 		Error_Handler();
 	}
@@ -116,7 +116,7 @@ void SMV_ADS1118_Sweep (SMV_ADS1118 *ads, double arr []){
 	ads->config.bits.mux = ADC_CHANNEL_0;
 	inputCode = ads->config.inputCode;
 
-	if (HAL_SPI_TransmitReceive(ads->hspi, (uint16_t*)&inputCode, (uint16_t*)&(spi_buf.unsgnd), 1, 100)!= HAL_OK){
+	if (HAL_SPI_TransmitReceive(ads->hspi, (uint8_t*)&inputCode, (uint8_t*)&(spi_buf.unsgnd), 1, 100)!= HAL_OK){
 		ads->error_flag = 1;
 		Error_Handler();
 	}
