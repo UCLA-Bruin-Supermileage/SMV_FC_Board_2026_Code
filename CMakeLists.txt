@@ -69,3 +69,8 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 
     # Add user defined libraries
 )
+
+set_source_files_properties(
+    ${CMAKE_CURRENT_SOURCE_DIR}/Core/Src/smv_ads1118.c
+    PROPERTIES COMPILE_FLAGS "-Wno-incompatible-pointer-types"
+)

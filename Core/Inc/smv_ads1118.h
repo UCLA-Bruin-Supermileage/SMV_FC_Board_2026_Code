@@ -36,7 +36,7 @@ union uintToInt {
 #define ADC_SS_LENGTH   1
 
 # define SWEEP_DELAY 3
-#define ADC_TIMEOUT_MS 10
+#define ADC_TIMEOUT_MS 20
 
 /*
  * Input MUX selection
@@ -88,12 +88,13 @@ struct SMV_ADS1118{
     uint16_t drdy_pin;
 
 	double channel_reads [4];
+    double adc_factor; // pre-calculated factor to convert raw adc value to voltage
 
 	/* function pointers 4+ bytes */
 	double (*read)(SMV_ADS1118*, ADC_CHANNELS);
 	void (*sweep)(SMV_ADS1118*, double*);
 	uint8_t (*checkFlag)(SMV_ADS1118*);
-	void (*init)(SMV_ADS1118*, SPI_HandleTypeDef *, GPIO_TypeDef*, uint16_t, GPIO_TypeDef*, uint16_t);
+	void (*init)(SMV_ADS1118*, SPI_HandleTypeDef *, SPI_TypeDef *, GPIO_TypeDef*, uint16_t, GPIO_TypeDef*, uint16_t);
 
 
 };

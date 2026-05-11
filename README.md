@@ -1,6 +1,6 @@
 # SMV Front Control Board
 
-This is the test bench for the front control board.
+This is the test bench for the front control board. The used for wiper2 and wiper4 are priviledged so they do not work as GPIO output.
 
 ## Setup
 
@@ -8,7 +8,7 @@ This board depends on the [SMV CANbus library](https://github.com/UCLA-Bruin-Sup
 
 ### Pin Mappings
 
-Peripheral control pins should be set to GPIO_Output.
+Peripheral control pins should be set to GPIO_Output. 
 
 | Name | Pin |
 |----- | ---- |
